@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Phase-O-Matic</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="description" content="Track Phase 10 players, phases, scores, rounds, and winners." />
+    <meta name="theme-color" content="#0f172a" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Phase-O-Matic" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="apple-touch-icon" href="icon/pom-192.png" />
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app-shell">
+    <header class="card">
+        <div class="card-header">
+            <div>
+                <h1>Phase-O-Matic</h1>
+                <p class="text-muted">Track Phase 10 phases, rounds, scores and winners!</p>
+            </div>
+            <div class="flex-row">
+                <button id="newGameBtn" class="secondary">Reset / New Game</button>
+            </div>
+        </div>
+
+        <div class="flex-row mt-2">
+            <div class="pill"><span>Players:</span><span id="playerCountLabel">0</span></div>
+            <div class="pill"><span>Round:</span><span id="roundLabel">0</span></div>
+            <div class="pill"><span>State:</span><span id="stateLabel">Setup</span></div>
+        </div>
+    </header>
+
+    <!-- Setup Screen -->
+    <section id="setupScreen" class="card active">
+        <div class="card-header">
+            <h2>Game Setup</h2>
+            <span class="badge">2–6 players</span>
+        </div>
+
+        <div class="flex-row">
+            <div class="flex-grow">
+                <label for="playerNameInput">Player name</label>
+                <input id="playerNameInput" type="text" placeholder="Enter player name">
+            </div>
+            <div>
+                <label>&nbsp;</label>
+                <button id="addPlayerBtn">Add Player</button>
+            </div>
+        </div>
+
+        <div class="player-list mt-2" id="playerList"></div>
+
+        <div class="mt-3 flex-row">
+            <button id="startGameBtn">Start Game</button>
+            <span class="text-muted">Add between 2 and 6 players, then start the game.</span>
+        </div>
+
+        <div id="setupError" class="error-text mt-2" style="display:none;"></div>
+    </section>
+
+    <!-- Game Over Screen (moved above history; replaces scoreboard when finished) -->
+    <section id="gameOverScreen" class="card">
+        <div class="card-header">
+            <h2>Game Over</h2>
+            <span class="badge success">Winner Determined</span>
+        </div>
+
+        <div class="winner-highlight">
+            <div class="winner-name" id="winnerTitle"></div>
+            <div class="winner-sub" id="winnerSubtitle"></div>
+        </div>
+
+        <div class="winner-list mt-3" id="winnerList"></div>
+
+        <h3 class="mt-3">Final Ranking</h3>
+        <div class="winner-list mt-2" id="finalRankingList"></div>
+
+        <div class="mt-3 text-center">
+            <button id="playAgainBtn">Play Again</button>
+        </div>
+    </section>
+
+    <!-- Game Screen (Active Scoreboard) -->
+    <section id="gameScreen" class="card">
+        <div class="card-header">
+            <h2>Active Scoreboard</h2>
+            <button id="endRoundBtn">End Round / Enter Scores</button>
+        </div>
+
+        <p class="text-muted">Scoreboard is sorted by total points (lowest at the top). Hover or read phase descriptions for requirements.</p>
+
+        <table class="scoreboard" aria-label="Phase 10 scoreboard">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Player</th>
+                <th>Phase</th>
+                <th>Phase Description</th>
+                <th>Total Points</th>
+            </tr>
+            </thead>
+            <tbody id="scoreboardBody"></tbody>
+        </table>
+    </section>
+
+    <!-- History / Log -->
+    <section id="historyCard" class="card" style="display:none;">
+        <div class="history-toggle">
+            <h2>Round History</h2>
+            <button id="toggleHistoryBtn" class="secondary">Show / Hide</button>
+        </div>
+        <div class="history-body" id="historyBody"></div>
+    </section>
+</div>
+
+<!-- End-of-Round Modal (also used for editing rounds) -->
+<div class="modal-backdrop" id="roundModalBackdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="roundModalTitle">
+        <div class="modal-header">
+            <h2 id="roundModalTitle">End of Round – Enter Results</h2>
+            <span class="badge">Round <span id="modalRoundLabel"></span></span>
+        </div>
+
+        <div class="modal-body">
+            <p class="text-muted">For each player, mark whether they completed their phase and enter their points for this round. Points default to zero if left blank.</p>
+
+            <div id="roundFormBody"></div>
+            <div id="roundFormError" class="error-text"></div>
+        </div>
+
+        <div class="modal-footer">
+            <button id="cancelRoundBtn" class="secondary">Cancel</button>
+            <button id="confirmRoundBtn">Confirm</button>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
